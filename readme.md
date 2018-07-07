@@ -9,6 +9,11 @@
 * [RefineNet](07.RefineNet.md)
 
 
+### 图片重构
+
+* [08.image_restore.md](08.image_restore.md)
+
+
 ## 基于semantic segmentation来做instance segmentation的论文
 
 * [2015-Instance-aware Semantic Segmentation via Multi-task Network Cascades](paper/2015-Instance-aware%20Semantic%20Segmentation%20via%20Multi-task%20Network%20Cascades.pdf)
