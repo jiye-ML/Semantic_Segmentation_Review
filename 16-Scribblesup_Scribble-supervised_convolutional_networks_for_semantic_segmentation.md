@@ -1,3 +1,4 @@
+* [paper](paper/2016-Scribblesup%20Scribble-supervised%20convolutional%20networks%20for%20semantic%20segmentation.pdf)
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 * 这篇文章提出了一种基于用户交互的图片分割训练方法(ScribbleSup)。即训练者只需要在图片上的小部分区域进行标注(scribble annotation)即可训练分割网络。如下图所示的标注方式（左图：原图；中图：传统的语义分割标注；右图：scribble annotation）：
