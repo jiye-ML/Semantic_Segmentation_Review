@@ -1,5 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
 * 这篇文章提出了一种基于用户交互的图片分割训练方法(ScribbleSup)。即训练者只需要在图片上的小部分区域进行标注(scribble annotation)即可训练分割网络。如下图所示的标注方式（左图：原图；中图：传统的语义分割标注；右图：scribble annotation）：
 
   ![img](readme/Scribblesup_Scribble-supervised_convolutional_networks_for_semantic_segmentation_pairwise_直观感受.png)
@@ -19,7 +17,7 @@
 * Task1: 该算法要从scibble传播信息到未标注的像素 方案：GrubCut
 
 * Task2: 该算法要学习一个卷积神经网络以便进行像素级别的预测 方案：FCN
-  目标函数：\(\sum_{i}\varphi (y_{i}|X,S) + \sum_{i, j}\varphi _{ij}(y_{i},y_{j}|X)\)，该目标函数包含两部分，
+  目标函数：\\(\sum_{i}\varphi (y_{i}|X,S) + \sum_{i, j}\varphi _{ij}(y_{i},y_{j}|X)\\)，该目标函数包含两部分，
 
   * 第一项是单个超像素的一元项，第二项是关于一对超像素的pairwise 项.
   * 一元项包括两部分，第一部分基于 scribble 的信息，定义如下：
