@@ -20,7 +20,7 @@
 
 - 给定一组训练图像，我们可以从中学习共同的对象特征来预测整个对象的区域。因此，在自下而上的步骤中，我们将初始对象定位作为对象种子并从中挖掘共同对象特征以扩展对象区域。然后在自上而下的步骤中，我们使用挖掘的对象区域作为监督来训练分割网络以预测精细对象mask。预测的对象mask包含更多对象区域，这些区域更准确并提供更多对象的训练样本，因此我们可以进一步挖掘它们的共同对象特征。并且迭代地进行上述过程以逐步产生精细对象区域并优化分割网络。通过迭代，初始定位中的不准确区域被逐步校正，因此我们的方法是稳健的并且可以容忍不准确的初始定位。图1(b)显示了一些例子，其中初始定位非常粗糙和不准确，而我们的方法仍然可以产生令人满意的结果。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features_示意图.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features_示意图.png)
 
 图1. (a) 提出的MCOF框架的图示。 我们的框架迭代地挖掘共同的对象特征并扩展对象区域。(b) 初始对象种子和我们挖掘的对象区域的示例。 我们的方法可以容忍不准确的初始定位并产生相当令人满意的结果。
 
@@ -58,11 +58,11 @@
   - 自下而上的步骤挖掘来自对象种子的共同对象特征以产生精细对象区域，并且自上而下的步骤使用所产生的对象区域来训练弱监督的分割网络。 预测的分割mask包含比初始更完整的对象区域。 
   - 然后，我们将它们作为对象种子来挖掘共同的对象特征，并且迭代地进行处理以逐步地校正不准确的区域并产生精细的对象区域。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features_MCOF-方法.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features_MCOF-方法.png)
 
 - 注意，在第一次迭代中，初始对象种子仅包含鉴别区域，在挖掘共同对象特征之后，仍然缺少一些非鉴别区域。 为了解决这个问题，我们建议将显着性图与挖掘的对象区域结合起来。 在第一次迭代之后，分割的mask包含更多的对象区域并且更准确，而显着性图的精度也是有限的，因此在稍后的迭代中，显着性映射将不再采用，这是为了防止引入额外的噪声。 整个过程总结为算法1。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features_MCOF-算法.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features_MCOF-算法.png)
 
 #### 2. 挖掘共同对象特征
 
@@ -70,32 +70,32 @@
 
 - 为了获得初始对象定位，我们训练分类网络并使用CAM方法来生成每个对象的热力图。 如图3所示，热力图非常粗糙，用于定位对象的鉴别区域，首先，我们使用基于图的分割方法将图像分割成超像素区域并对每个区域内的热力图进行平均。 我们观察到CAM图通常具有几个中心区域，其中围绕它们具有低置信区域，并且中心区域主要是对象的关键部分。 因此，对于每个热力图，我们选择其局部最大区域作为初始种子。 然而，这可能会错过许多区域，因此也选择热图大于阈值的区域作为初始种子。 一些例子如图3所示。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-CAM.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-CAM.png)
 
 ##### 从初始对象种子挖掘共同对象特征：
 
 - 初始对象种子太粗糙，无法满足语义分割的要求，但是，它们包含对象的鉴别区域。 例如，如图4所示，一个图像可以定位一个人的手，而另一个图像可以给出面部的位置。 我们认为，同一类的区域具有一些共享属性，即共同的对象特征。 因此，给定一组具有种子区域的训练图像，我们可以从中学习共同的对象特征并预测对象的整个区域，从而扩展对象区域并抑制噪声区域。 我们通过使用对象种子作为训练数据训练名为RegionNet的区域分类网络来实现这一目标。
 
-![1545722147934](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-从初始对象种子挖掘共同对象特征.png)
+![1545722147934](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-从初始对象种子挖掘共同对象特征.png)
 
-![1545722227253](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-从初始对象种子挖掘共同对象特征-02.png)
+![1545722227253](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-从初始对象种子挖掘共同对象特征-02.png)
 
 #### 显着性引导的对象区域补充
 
 - 注意，RegionNet是从初始种子区域学习的，这些种子区域主要包含对象的关键区域。 使用RegionNet，可以扩展对象区域，同时仍然存在一些被忽略的区域。例如，初始种子区域主要集中在人的头部和手部，而其他区域（例如身体）经常被忽略。 在通过RegionNet扩展后，身体的某些区域仍然缺失（图4(b)）
 - 为了解决这个问题，我们提出通过合并具有单个对象类的图像的显着性图来补充对象区域。请注意，我们不直接使用显着性图作为初始定位，因为在以前的研究中[31]，因为在某些情况下，显着对象可能不是我们在语义分割中需要的对象类，并且显着图性本身也包含会影响定位精度的噪声区域。 一些例子如图5所示。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-显著性引导的对象区域补充.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-显著性引导的对象区域补充.png)
 
-![1545722375789](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-显著性引导的对象区域补充-02.png)
+![1545722375789](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-显著性引导的对象区域补充-02.png)
 
 #### 迭代学习框架
 
 - 精细化的对象区域为我们提供了一些可靠的对象定位，我们可以将它们作为监督来训练弱监督的语义分割网络。 虽然之前的研究依赖于定位线索和类标签来设计和训练分割网络，但在我们的工作中，我们已经删除了之前RegionNet中的错误类区域，因此精化对象区域不包含任何错误类。 因此我们只能使用定位线索作为监督，这与全监督的框架完全兼容，因此我们可以从现有的全监督架构中受益。 在本文中，我们利用流行的DeepLab LargeFOV模型[2]作为我们的分割网络的基本网络，名为PixelNet。
 
-![1545722459181](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-迭代学习框架.png)
+![1545722459181](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-迭代学习框架.png)
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-迭代学习框架-02.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-迭代学习框架-02.png)
 
 ### why有效
 
@@ -103,20 +103,20 @@
 
 - 为了评估提出的渐进式共同对象特征挖掘和网络训练框架的有效性，我们评估了每次迭代的RegionNet和PixelNet对训练集和验证集的影响。 在模块研究中，我们使用VGG16作为PixelNet的基础网络。 结果显示在表3中。我们可以看到初始对象种子非常粗糙（在训练集上为14.27％mIoU），通过应用RegionNet来学习物体的共同特征，通过引入显着性，性能达到29.1％ - 引导细化之后，达到34.8％，在使用PixelNet学习后，它达到了48.4％。 在后来的迭代中，性能逐渐提高，这表明我们的方法是有效的。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-why-01.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-why-01.png)
 
 #### 与直接迭代训练的比较
 
 - 通过与直接迭代训练方法的比较，我们广泛地进行了实验，以验证所提出的渐进式共同对象特征挖掘和网络训练框架的有效性。 对于直接迭代训练方法，我们从第一次迭代的分割结果开始，然后在后来的迭代中，使用前一次迭代的分割mask来训练分割网络。
 - 图8显示了比较。 通过迭代，直接迭代方法的性能缓慢增加并且仅达到低精度，而在所提出的MCOF中，性能快速增加并且实现更高的准确度。 该结果表明我们的MCOF框架是有效的。 MCOF逐步挖掘来自先前对象mask的共同对象特征，然后扩展更可靠的对象区域以优化语义分割网络，因此精度可以快速增加到非常令人满意的结果。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-why-02.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-why-02.png)
 
 #### 显着性细化的有效性
 
 - 初始对象种子仅定位对象的鉴别区域，例如，人的头部和手部，而其他区域（例如身体）经常被忽略。 为了补充其他对象区域，将显着性图与初始对象种子合并。 这对于挖掘整个物体区域非常重要。 为了评估有效性，我们在没有显着性引导细化的情况下对框架进行实验，并比较每次迭代的PixelNet的性能。 结果显示在表4中。如果没有结合显着性图，一些对象区域将会丢失，因此性能将受到限制并且无法达到令人满意的准确度。
 
-![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by Iteratively-Mining-Common-Object-Features-why-03.png)
+![img](readme/18-Weakly-Supervised-Semantic-Segmentation-by-Iteratively-Mining-Common-Object-Features-why-03.png)
 
 表4. 评估显着性引导细化的有效性。我们在Pascal VOC 2012验证集上显示每次迭代的PixelNet的mIoU。如果没有显着性引导的细化，性能将受到限制并且无法达到令人满意的精度。
 
